@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentiment-api-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sentiment-api
+  template:
+    metadata:
+      labels:
+        app: sentiment-api
+    spec:
+      containers:
+        - name: sentiment-api
+          image: txluog/sentiment-api:latest
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 20
